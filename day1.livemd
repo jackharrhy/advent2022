@@ -1,0 +1,40 @@
+# Advent 2022 - Day 1
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+## Setup
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+input =
+  input
+  |> Kino.Input.read()
+  |> String.trim()
+  |> String.split("\n\n")
+  |> Enum.map(fn elf ->
+    elf |> String.split("\n") |> Enum.map(&String.to_integer/1)
+  end)
+```
+
+```elixir
+elfs = input |> Enum.map(&Enum.sum/1) |> Enum.sort(&(&1 >= &2))
+```
+
+## Part 1
+
+```elixir
+Enum.at(elfs, 0)
+```
+
+## Part 2
+
+```elixir
+elfs |> Enum.take(3) |> Enum.sum()
+```
