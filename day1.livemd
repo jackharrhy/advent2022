@@ -1,9 +1,17 @@
+<!-- livebook:{"persist_outputs":true} -->
+
 # Advent 2022 - Day 1
 
 ```elixir
 Mix.install([
   {:kino, github: "livebook-dev/kino"}
 ])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
 ```
 
 ## Setup
@@ -23,8 +31,20 @@ input =
   end)
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+[[1000, 2000, 3000], [4000], [5000, 6000], [7000, 8000, 9000], [10000]]
+```
+
 ```elixir
 elfs = input |> Enum.map(&Enum.sum/1) |> Enum.sort(&(&1 >= &2))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[24000, 11000, 10000, 6000, 4000]
 ```
 
 ## Part 1
@@ -33,8 +53,20 @@ elfs = input |> Enum.map(&Enum.sum/1) |> Enum.sort(&(&1 >= &2))
 Enum.at(elfs, 0)
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+24000
+```
+
 ## Part 2
 
 ```elixir
 elfs |> Enum.take(3) |> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+45000
 ```
