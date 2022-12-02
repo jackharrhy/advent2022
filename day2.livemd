@@ -18,7 +18,85 @@ input =
   |> Kino.Input.read()
   |> String.trim()
   |> String.split("\n")
-  |> Enum.map(fn x ->
-    x
-  end)
+  |> Enum.map(&String.split(&1, " "))
+```
+
+```elixir
+defmodule RockPaperScissors do
+  def score(them, you) do
+    choice_score =
+      case you do
+        :rock -> 1
+        :paper -> 2
+        :scissors -> 3
+      end
+
+    game_score =
+      case {you, them} do
+        {you, you} -> 3
+        {:rock, :paper} -> 0
+        {:rock, :scissors} -> 6
+        {:paper, :scissors} -> 0
+        {:paper, :rock} -> 6
+        {:scissors, :rock} -> 0
+        {:scissors, :paper} -> 6
+      end
+
+    choice_score + game_score
+  end
+
+  def pick_then_score(them, wanted_result) do
+    case {them, wanted_result} do
+      {x, :draw} -> score(them, x)
+      {:rock, :win} -> score(them, :paper)
+      {:rock, :throw} -> score(them, :scissors)
+      {:paper, :win} -> score(them, :scissors)
+      {:paper, :throw} -> score(them, :rock)
+      {:scissors, :win} -> score(them, :rock)
+      {:scissors, :throw} -> score(them, :paper)
+    end
+  end
+end
+```
+
+## Part 1
+
+```elixir
+assumed_guide = %{
+  "A" => :rock,
+  "B" => :paper,
+  "C" => :scissors,
+  "X" => :rock,
+  "Y" => :paper,
+  "Z" => :scissors
+}
+```
+
+```elixir
+input
+|> Enum.map(fn [them, you] ->
+  RockPaperScissors.score(assumed_guide[them], assumed_guide[you])
+end)
+|> Enum.sum()
+```
+
+## Part 2
+
+```elixir
+actual_guide = %{
+  "A" => :rock,
+  "B" => :paper,
+  "C" => :scissors,
+  "X" => :throw,
+  "Y" => :draw,
+  "Z" => :win
+}
+```
+
+```elixir
+input
+|> Enum.map(fn [them, you] ->
+  RockPaperScissors.pick_then_score(actual_guide[them], actual_guide[you])
+end)
+|> Enum.sum()
 ```
