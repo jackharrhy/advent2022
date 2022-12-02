@@ -1,9 +1,17 @@
+<!-- livebook:{"persist_outputs":true} -->
+
 # Advent 2022 - Day 2
 
 ```elixir
 Mix.install([
   {:kino, github: "livebook-dev/kino"}
 ])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
 ```
 
 ## Setup
@@ -19,6 +27,12 @@ input =
   |> String.trim()
   |> String.split("\n")
   |> Enum.map(&String.split(&1, " "))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[["A", "Y"], ["B", "X"], ["C", "Z"]]
 ```
 
 ```elixir
@@ -59,6 +73,12 @@ defmodule RockPaperScissors do
 end
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+{:module, RockPaperScissors, <<70, 79, 82, 49, 0, 0, 9, ...>>, {:pick_then_score, 2}}
+```
+
 ## Part 1
 
 ```elixir
@@ -72,12 +92,24 @@ assumed_guide = %{
 }
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+%{"A" => :rock, "B" => :paper, "C" => :scissors, "X" => :rock, "Y" => :paper, "Z" => :scissors}
+```
+
 ```elixir
 input
 |> Enum.map(fn [them, you] ->
   RockPaperScissors.score(assumed_guide[them], assumed_guide[you])
 end)
 |> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+15
 ```
 
 ## Part 2
@@ -93,10 +125,22 @@ actual_guide = %{
 }
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+%{"A" => :rock, "B" => :paper, "C" => :scissors, "X" => :throw, "Y" => :draw, "Z" => :win}
+```
+
 ```elixir
 input
 |> Enum.map(fn [them, you] ->
   RockPaperScissors.pick_then_score(actual_guide[them], actual_guide[you])
 end)
 |> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+12
 ```
