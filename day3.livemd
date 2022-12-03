@@ -13,58 +13,51 @@ input = Kino.Input.textarea("Please paste your input file:")
 ```
 
 ```elixir
-input
-|> Kino.Input.read()
-|> String.trim()
-|> String.split("\n")
-|> Enum.map(fn rucksack ->
-  {rucksack_a, rucksack_b} =
-    rucksack
-    |> String.split("", trim: true)
-    |> Enum.split(round(String.length(rucksack) / 2))
+rugsacks =
+  input
+  |> Kino.Input.read()
+  |> String.trim()
+  |> String.split("\n", trim: true)
+  |> Enum.map(&String.split(&1, "", trim: true))
+```
 
-  rucksack_a = MapSet.new(rucksack_a)
-  rucksack_b = MapSet.new(rucksack_b)
+```elixir
+defmodule Rugsack do
+  def item_to_priority(item) do
+    item_as_number = item |> String.to_charlist() |> Enum.at(0)
 
-  val =
-    MapSet.intersection(rucksack_a, rucksack_b)
-    |> Enum.at(0)
-
-  val_as_int = val |> String.to_charlist() |> Enum.at(0)
-
-  if val == String.upcase(val) do
-    val_as_int - 38
-  else
-    val_as_int - 96
+    if item == String.upcase(item) do
+      item_as_number - 38
+    else
+      item_as_number - 96
+    end
   end
+end
+```
+
+```elixir
+rugsacks
+|> Enum.map(fn rugsack ->
+  rugsack
+  |> Enum.split(round(length(rugsack) / 2))
+  |> Tuple.to_list()
+  |> Enum.map(&MapSet.new(&1))
+  |> Enum.reduce(&MapSet.intersection(&1, &2))
+  |> Enum.at(0)
+  |> Rugsack.item_to_priority()
 end)
 |> Enum.sum()
 ```
 
 ```elixir
-input
-|> Kino.Input.read()
-|> String.trim()
-|> String.split("\n")
+rugsacks
 |> Enum.chunk_every(3)
 |> Enum.map(fn rugsacks ->
-  val =
-    rugsacks
-    |> Enum.map(fn rugsack ->
-      rugsack |> String.split("", trim: true) |> MapSet.new()
-    end)
-    |> Enum.reduce(fn r, acc ->
-      MapSet.intersection(r, acc)
-    end)
-    |> Enum.at(0)
-
-  val_as_int = val |> String.to_charlist() |> Enum.at(0)
-
-  if val == String.upcase(val) do
-    val_as_int - 38
-  else
-    val_as_int - 96
-  end
+  rugsacks
+  |> Enum.map(&MapSet.new(&1))
+  |> Enum.reduce(&MapSet.intersection(&1, &2))
+  |> Enum.at(0)
+  |> Rugsack.item_to_priority()
 end)
 |> Enum.sum()
 ```
