@@ -1,0 +1,70 @@
+# Advent 2022 - Day 2
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+input
+|> Kino.Input.read()
+|> String.trim()
+|> String.split("\n")
+|> Enum.map(fn rucksack ->
+  {rucksack_a, rucksack_b} =
+    rucksack
+    |> String.split("", trim: true)
+    |> Enum.split(round(String.length(rucksack) / 2))
+
+  rucksack_a = MapSet.new(rucksack_a)
+  rucksack_b = MapSet.new(rucksack_b)
+
+  val =
+    MapSet.intersection(rucksack_a, rucksack_b)
+    |> Enum.at(0)
+
+  val_as_int = val |> String.to_charlist() |> Enum.at(0)
+
+  if val == String.upcase(val) do
+    val_as_int - 38
+  else
+    val_as_int - 96
+  end
+end)
+|> Enum.sum()
+```
+
+```elixir
+input
+|> Kino.Input.read()
+|> String.trim()
+|> String.split("\n")
+|> Enum.chunk_every(3)
+|> Enum.map(fn rugsacks ->
+  val =
+    rugsacks
+    |> Enum.map(fn rugsack ->
+      rugsack |> String.split("", trim: true) |> MapSet.new()
+    end)
+    |> Enum.reduce(fn r, acc ->
+      MapSet.intersection(r, acc)
+    end)
+    |> Enum.at(0)
+
+  val_as_int = val |> String.to_charlist() |> Enum.at(0)
+
+  if val == String.upcase(val) do
+    val_as_int - 38
+  else
+    val_as_int - 96
+  end
+end)
+|> Enum.sum()
+```
