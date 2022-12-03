@@ -35,6 +35,8 @@ defmodule Rugsack do
 end
 ```
 
+## Part 1
+
 ```elixir
 rugsacks
 |> Enum.map(fn rugsack ->
@@ -48,6 +50,8 @@ rugsacks
 end)
 |> Enum.sum()
 ```
+
+## Part 2
 
 ```elixir
 rugsacks
