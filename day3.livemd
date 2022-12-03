@@ -1,4 +1,4 @@
-# Advent 2022 - Day 2
+# Advent 2022 - Day 3
 
 ```elixir
 Mix.install([
