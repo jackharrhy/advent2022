@@ -24,14 +24,11 @@ rugsacks =
 ```elixir
 defmodule Rugsack do
   def item_to_priority(item) do
-    item_as_number = item |> String.to_charlist() |> Enum.at(0)
-
-    if item == String.upcase(item) do
-      item_as_number - 38
-    else
-      item_as_number - 96
-    end
+    item |> String.to_charlist() |> Enum.at(0) |> item_number_to_priority
   end
+
+  def item_number_to_priority(number) when number >= 97, do: number - 96
+  def item_number_to_priority(number), do: number - 38
 end
 ```
 
