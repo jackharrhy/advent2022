@@ -13,7 +13,7 @@ input = Kino.Input.textarea("Please paste your input file:")
 ```
 
 ```elixir
-rugsacks =
+rucksacks =
   input
   |> Kino.Input.read()
   |> String.trim()
@@ -22,7 +22,7 @@ rugsacks =
 ```
 
 ```elixir
-defmodule Rugsack do
+defmodule Rucksack do
   def item_to_priority(item) do
     item |> String.to_charlist() |> Enum.at(0) |> item_number_to_priority
   end
@@ -35,10 +35,10 @@ end
 ## Part 1
 
 ```elixir
-rugsacks
-|> Enum.map(fn rugsack ->
-  rugsack
-  |> Enum.split(round(length(rugsack) / 2))
+rucksacks
+|> Enum.map(fn rucksack ->
+  rucksack
+  |> Enum.split(round(length(rucksack) / 2))
   |> Tuple.to_list()
   |> Enum.map(&MapSet.new(&1))
   |> Enum.reduce(&MapSet.intersection(&1, &2))
@@ -51,10 +51,10 @@ end)
 ## Part 2
 
 ```elixir
-rugsacks
+rucksacks
 |> Enum.chunk_every(3)
-|> Enum.map(fn rugsacks ->
-  rugsacks
+|> Enum.map(fn rucksacks ->
+  rucksacks
   |> Enum.map(&MapSet.new(&1))
   |> Enum.reduce(&MapSet.intersection(&1, &2))
   |> Enum.at(0)
