@@ -1,9 +1,17 @@
+<!-- livebook:{"persist_outputs":true} -->
+
 # Advent 2022 - Day 3
 
 ```elixir
 Mix.install([
   {:kino, github: "livebook-dev/kino"}
 ])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
 ```
 
 ## Section
@@ -21,6 +29,23 @@ rucksacks =
   |> Enum.map(&String.split(&1, "", trim: true))
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+[
+  ["v", "J", "r", "w", "p", "W", "t", "w", "J", "g", "W", "r", "h", "c", "s", "F", "M", "M", "f",
+   "F", "F", "h", "F", "p"],
+  ["j", "q", "H", "R", "N", "q", "R", "j", "q", "z", "j", "G", "D", "L", "G", "L", "r", "s", "F",
+   "M", "f", "F", "Z", "S", "r", "L", "r", "F", "Z", "s", "S", "L"],
+  ["P", "m", "m", "d", "z", "q", "P", "r", "V", "v", "P", "w", "w", "T", "W", "B", "w", "g"],
+  ["w", "M", "q", "v", "L", "M", "Z", "H", "h", "H", "M", "v", "w", "L", "H", "j", "b", "v", "c",
+   "j", "n", "n", "S", "B", "n", "v", "T", "Q", "F", "n"],
+  ["t", "t", "g", "J", "t", "R", "G", "J", "Q", "c", "t", "T", "Z", "t", "Z", "T"],
+  ["C", "r", "Z", "s", "J", "s", "P", "P", "Z", "s", "G", "z", "w", "w", "s", "L", "w", "L", "m",
+   "p", "w", "M", "D", "w"]
+]
+```
+
 ```elixir
 defmodule Rucksack do
   def item_to_priority(item) do
@@ -30,6 +55,12 @@ defmodule Rucksack do
   def item_number_to_priority(number) when number >= 97, do: number - 96
   def item_number_to_priority(number), do: number - 38
 end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Rucksack, <<70, 79, 82, 49, 0, 0, 7, ...>>, {:item_number_to_priority, 1}}
 ```
 
 ## Part 1
@@ -48,6 +79,12 @@ end)
 |> Enum.sum()
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+157
+```
+
 ## Part 2
 
 ```elixir
@@ -61,4 +98,10 @@ rucksacks
   |> Rugsack.item_to_priority()
 end)
 |> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+70
 ```
