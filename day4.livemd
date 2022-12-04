@@ -1,0 +1,80 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent 2022 - Day 4
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Setup
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+sets =
+  input
+  |> Kino.Input.read()
+  |> String.split("\n", trim: true)
+  |> Enum.map(fn line ->
+    line
+    |> String.split(",")
+    |> Enum.map(fn pair ->
+      pair
+      |> String.split("-")
+      |> Enum.map(&String.to_integer/1)
+      |> Enum.reduce(&Range.new(&1, &2))
+      |> MapSet.new()
+    end)
+  end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  [MapSet.new([2, 3, 4]), MapSet.new([6, 7, 8])],
+  [MapSet.new([2, 3]), MapSet.new([4, 5])],
+  [MapSet.new([5, 6, 7]), MapSet.new([7, 8, 9])],
+  [MapSet.new([2, 3, 4, 5, 6, 7, 8]), MapSet.new([3, 4, 5, 6, 7])],
+  [MapSet.new([6]), MapSet.new([4, 5, 6])],
+  [MapSet.new([2, 3, 4, 5, 6]), MapSet.new([4, 5, 6, 7, 8])]
+]
+```
+
+## Part 1
+
+```elixir
+sets
+|> Enum.filter(fn [a, b] -> MapSet.subset?(a, b) || MapSet.subset?(b, a) end)
+|> Enum.count()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2
+```
+
+## Part 2
+
+```elixir
+sets
+|> Enum.filter(fn [a, b] -> MapSet.intersection(a, b) |> Enum.count() != 0 end)
+|> Enum.count()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+4
+```

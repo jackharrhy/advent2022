@@ -14,7 +14,7 @@ Mix.install([
 :ok
 ```
 
-## Section
+## Setup
 
 ```elixir
 input = Kino.Input.textarea("Please paste your input file:")
@@ -24,7 +24,6 @@ input = Kino.Input.textarea("Please paste your input file:")
 rucksacks =
   input
   |> Kino.Input.read()
-  |> String.trim()
   |> String.split("\n", trim: true)
   |> Enum.map(&String.split(&1, "", trim: true))
 ```
