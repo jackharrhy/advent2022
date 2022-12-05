@@ -21,7 +21,7 @@ input = Kino.Input.textarea("Please paste your input file:")
 ```
 
 ```elixir
-[initial_state, instructions] =
+[initial_state_string, instructions_string] =
   input
   |> Kino.Input.read()
   |> String.split("\n\n", trim: true)
@@ -30,13 +30,15 @@ input = Kino.Input.textarea("Please paste your input file:")
 <!-- livebook:{"output":true} -->
 
 ```
-["    [M]             [Z]     [V]    \n    [Z]     [P]     [L]     [Z] [J]\n[S] [D]     [W]     [W]     [H] [Q]\n[P] [V] [N] [D]     [P]     [C] [V]\n[H] [B] [J] [V] [B] [M]     [N] [P]\n[V] [F] [L] [Z] [C] [S] [P] [S] [G]\n[F] [J] [M] [G] [R] [R] [H] [R] [L]\n[G] [G] [G] [N] [V] [V] [T] [Q] [F]\n 1   2   3   4   5   6   7   8   9 ",
- "move 6 from 9 to 3\nmove 2 from 2 to 1\nmove 1 from 8 to 2\nmove 3 from 7 to 2\nmove 7 from 6 to 9\nmove 1 from 9 to 5\nmove 3 from 5 to 7\nmove 6 from 8 to 6\nmove 1 from 7 to 8\nmove 6 from 6 to 5\nmove 4 from 5 to 8\nmove 9 from 2 to 9\nmove 1 from 2 to 3\nmove 3 from 1 to 3\nmove 3 from 5 to 1\nmove 10 from 3 to 5\nmove 4 from 4 to 6\nmove 2 from 7 to 6\nmove 2 from 6 to 9\nmove 6 from 8 to 6\nmove 1 from 4 to 3\nmove 1 from 4 to 5\nmove 1 from 4 to 1\nmove 2 from 3 to 1\nmove 1 from 3 to 7\nmove 8 from 1 to 9\nmove 1 from 1 to 2\nmove 1 from 2 to 7\nmove 6 from 6 to 3\nmove 7 from 3 to 5\nmove 14 from 5 to 6\nmove 2 from 1 to 3\nmove 5 from 5 to 8\nmove 5 from 8 to 1\nmove 2 from 7 to 1\nmove 5 from 6 to 9\nmove 8 from 9 to 3\nmove 13 from 9 to 3\nmove 7 from 1 to 4\nmove 6 from 4 to 1\nmove 22 from 3 to 1\nmove 1 from 9 to 3\nmove 2 from 6 to 1\nmove 1 from 3 to 4\nmove 7 from 9 to 8\nmove 2 from 1 to 7\nmove 2 from 3 to 2\nmove 2 from 6 to 9\nmove 2 from 7 to 8\nmove 1 from 3 to 6\nmove 9 from 8 to 6\nmove 1 from 2 to 4\nmove 8 from 1 to 2\nmove 1 from 9 to 4\nmove 3 from 4 to 1\nmove 1 from 4 to 6\nmove 10 from 6 to 5\nmove 5 from 2 to 9\nmove 6 from 9 to 3\nmove 2 from 5 to 3\nmove 2 from 9 to 7\nmove 7 from 5 to 8\nmove 5 from 6 to 2\nmove 3 from 3 to 7\nmove 3 from 3 to 5\nmove 4 from 5 to 8\nmove 1 from 3 to 5\nmove 6 from 6 to 8\nmove 1 from 5 to 7\nmove 9 from 8 to 9\nmove 1 from 3 to 1\nmove 7 from 2 to 7\nmove 9 from 7 to 6\nmove 2 from 2 to 3\nmove 7 from 9 to 3\nmove 9 from 6 to 8\nmove 7 from 3 to 4\nmove 2 from 7 to 6\nmove 4 from 4 to 5\nmove 3 from 5 to 6\nmove 2 from 7 to 4\nmove 5 from 4 to 7\nmove 13 from 8 to 4\nmove 2 from 9 to 4\nmove 2 from 8 to 7\nmove 6 from 7 to 5\nmove 6 from 4 to 2\nmove 1 from 7 to 5\nmove 3 from 2 to 7\nmove 1 from 7 to 8\nmove 3 from 2 to 4\nmove 2 from 3 to 9\nmove 2 from 7 to 2\nmove 6 from 5 to 4\nmove 3 from 6 to 2\nmove 2 from 6 to 9\nmove 5 from 2 to 9\nmove 12 from 4 to 8\nmove 3 from 9 to 2\nmove 12 from 1 to 5\nmove 4 from 4 to 6\nmove 12 from 8 to 9\nmove 2 from 6 to 5\nmove 1 from 4 to 8\nmove 1 from 4 to 1\nmove 3 from 2 to 1\nmove 2 from 6 to 7\nmove 1 from 5 to 9\nmove 2 from 1 to 4\nmove 10 from 5 to 1\nmove 2 from 7 to 3\nmove 18 from 9 to 7\nmove 8 from 7 to 2\nmove 1 from 9 to 6\nmove 1 from 6 to 7\nmove 10 from 7 to 9\nmove 1 from 4 to 2\nmove 19 from 1 to 5\nmove 8 from 5 to 9\nmove 3 from 8 to 4\nmove 2 from 5 to 2\nmove 2 from 3 to 6\nmove 10 from 5 to 2\nmove 4 from 1 to 2\nmove 2 from 9 to 2\nmove 1 from 1 to 6\nmove 2 from 5 to 6\nmove 1 from 8 to 7\nmove 1 from 5 to 8\nmove 1 from 5 to 6\nmove 18 from 2 to 5\nmove 5 from 2 to 1\nmove 6 from 5 to 8\nmove 1 from 8 to 9\nmove 2 from 2 to 4\nmove 1 from 2 to 6\nmove 2 from 7 to 6\nmove 1 from 4 to 1\nmove 4 from 8 to 5\nmove 1 from 2 to 9\nmove 2 from 8 to 3\nmove 1 from 3 to 6\nmove 1 from 4 to 8\nmove 1 from 8 to 9\nmove 10 from 5 to 7\nmove 5 from 5 to 1\nmove 2 from 4 to 1\nmove 3 from 7 to 6\nmove 12 from 1 to 4\nmove 8 from 9 to 5\nmove 6 from 7 to 4\nmove 1 from 7 to 9\nmove 4 from 4 to 3\nmove 1 from 1 to 7\nmove 3 from 9 to 5\nmove 2 from 3 to 1\nmove 1 from 7 to 6\nmove 8 from 4 to 7\nmove 1 from 7 to 6\nmove 7 from 6 to 4\nmove 2 from 1 to 3\nmove 1 from 7 to 1\nmove 1 from 3 to 7\nmove 1 from 1 to 6\nmove 4 from 9 to 3\nmove 5 from 4 to 6\nmove 12 from 6 to 2\nmove 3 from 9 to 4\nmove 8 from 2 to 6\nmove 2 from 9 to 6\nmove 8 from 5 to 6\nmove 4 from 5 to 8\nmove 14 from 6 to 3\nmove 11 from 4 to 9\nmove 2 from 2 to 7\nmove 8 from 3 to 9\nmove 11 from 3 to 6\nmove 14 from 9 to 1\nmove 7 from 1 to 3\nmove 2 from 9 to 5\nmove 2 from 2 to 8\nmove 6 from 7 to 5\nmove 1 from 9 to 8\nmove 13 from 6 to 3\nmove 4 from 6 to 8\nmove 3 from 1 to 6\nmove 5 from 5 to 8\nmove 7 from 8 to 7\nmove 2 from 1 to 8\nmove 1 from 4 to 1\nmove 4 from 8 to 9\nmove 8 from 7 to 5\nmove 1 from 8 to 1\nmove 4 from 9 to 3\nmove 1 from 4 to 5\nmove 5 from 5 to 2\nmove 1 from 8 to 9\nmove 1 from 8 to 6\nmove 2 from 6 to 2\nmove 4 from 8 to 6\nmove 4 from 1 to 8\nmove 4 from 8 to 5\nmove 1 from 9 to 8\nmove 1 from 2 to 3\nmove 4 from 6 to 1\nmove 1 from 8 to 2\nmove 3 from 5 to 4\nmove 4 from 2 to 5\nmove 1 from 7 to 9\nmove 1 from 2 to 6\nmove 3 from 1 to 8\nmove 2 from 4 to 5\nmove 2 from 6 to 1\nmove 3 from 8 to 9\nmove 4 " <> ...]
+["    [D]    \n[N] [C]    \n[Z] [M] [P]\n 1   2   3 ",
+ "move 1 from 2 to 1\nmove 3 from 1 to 3\nmove 2 from 2 to 1\nmove 1 from 1 to 2"]
 ```
+
+## Parsing Initial State
 
 ```elixir
 rows =
-  initial_state
+  initial_state_string
   |> String.split("\n")
   |> Enum.reverse()
   |> tl()
@@ -46,14 +48,11 @@ rows =
 <!-- livebook:{"output":true} -->
 
 ```
-["    [M]             [Z]     [V]    ", "    [Z]     [P]     [L]     [Z] [J]",
- "[S] [D]     [W]     [W]     [H] [Q]", "[P] [V] [N] [D]     [P]     [C] [V]",
- "[H] [B] [J] [V] [B] [M]     [N] [P]", "[V] [F] [L] [Z] [C] [S] [P] [S] [G]",
- "[F] [J] [M] [G] [R] [R] [H] [R] [L]", "[G] [G] [G] [N] [V] [V] [T] [Q] [F]"]
+["    [D]    ", "[N] [C]    ", "[Z] [M] [P]"]
 ```
 
 ```elixir
-state =
+rows =
   rows
   |> Enum.map(fn line ->
     line
@@ -61,15 +60,21 @@ state =
     |> tl
     |> Enum.take_every(4)
   end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[[" ", "D", " "], ["N", "C", " "], ["Z", "M", "P"]]
+```
+
+```elixir
+initial_state =
+  rows
   |> Enum.reduce(List.duplicate([], length(rows) + 1), fn row, acc ->
     Enum.zip(row, acc)
-    |> Enum.map(fn {row, acc} ->
-      if row == " " do
-        acc
-      else
-        [row | acc]
-      end
-    end)
+    |> Enum.map(fn {row, acc} -> [row | acc] end)
+    |> Enum.map(&Enum.filter(&1, fn item -> item != " " end))
   end)
   |> Enum.map(&Enum.reverse(&1))
 ```
@@ -77,22 +82,14 @@ state =
 <!-- livebook:{"output":true} -->
 
 ```
-[
-  ["S", "P", "H", "V", "F", "G"],
-  ["M", "Z", "D", "V", "B", "F", "J", "G"],
-  ["N", "J", "L", "M", "G"],
-  ["P", "W", "D", "V", "Z", "G", "N"],
-  ["B", "C", "R", "V"],
-  ["Z", "L", "W", "P", "M", "S", "R", "V"],
-  ["P", "H", "T"],
-  ["V", "Z", "H", "C", "N", "S", "R", "Q"],
-  ["J", "Q", "V", "P", "G", "L", "F"]
-]
+[["N", "Z"], ["D", "C", "M"], ["P"]]
 ```
+
+## Parsing Instructions
 
 ```elixir
 instructions =
-  instructions
+  instructions_string
   |> String.split("\n")
   |> Enum.map(fn instruction ->
     instruction
@@ -106,650 +103,68 @@ instructions =
 <!-- livebook:{"output":true} -->
 
 ```
-[
-  [6, 9, 3],
-  [2, 2, 1],
-  [1, 8, 2],
-  [3, 7, 2],
-  [7, 6, 9],
-  [1, 9, 5],
-  [3, 5, 7],
-  [6, 8, 6],
-  [1, 7, 8],
-  [6, 6, 5],
-  [4, 5, 8],
-  [9, 2, 9],
-  [1, 2, 3],
-  [3, 1, 3],
-  [3, 5, 1],
-  [10, 3, 5],
-  [4, 4, 6],
-  [2, 7, 6],
-  [2, 6, 9],
-  [6, 8, 6],
-  [1, 4, 3],
-  [1, 4, 5],
-  [1, 4, 1],
-  [2, 3, 1],
-  [1, 3, 7],
-  [8, 1, 9],
-  [1, 1, 2],
-  [1, 2, 7],
-  [6, 6, 3],
-  [7, 3, 5],
-  [14, 5, 6],
-  [2, 1, 3],
-  [5, 5, 8],
-  [5, 8, 1],
-  [2, 7, 1],
-  [5, 6, 9],
-  [8, 9, 3],
-  [13, 9, 3],
-  [7, 1, 4],
-  [6, 4, 1],
-  [22, 3, 1],
-  [1, 9, 3],
-  [2, 6, 1],
-  [1, 3, 4],
-  '\a\t\b',
-  [2, 1, 7],
-  [2, 3, 2],
-  [2, 6, ...],
-  [2, ...],
-  [...],
-  ...
-]
+[[1, 2, 1], [3, 1, 3], [2, 2, 1], [1, 1, 2]]
+```
+
+## Utils
+
+```elixir
+defmodule CargoCrane do
+  def activate(model, instructions, initial_state) do
+    Enum.reduce(instructions, initial_state, fn [move, from, to], state ->
+      to_move =
+        state
+        |> Enum.at(from - 1)
+        |> Enum.take(move)
+
+      state
+      |> List.update_at(to - 1, fn stack ->
+        case model do
+          :CrateMover9000 -> (to_move |> Enum.reverse()) ++ stack
+          :CrateMover9001 -> to_move ++ stack
+          _ -> raise "I don't know that model of crane!"
+        end
+      end)
+      |> List.update_at(from - 1, fn stack ->
+        stack |> Enum.drop(move)
+      end)
+    end)
+  end
+
+  def inspect_tops(state) do
+    state |> Enum.map(&hd(&1)) |> Enum.join()
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, CargoCrane, <<70, 79, 82, 49, 0, 0, 12, ...>>, {:inspect_tops, 1}}
 ```
 
 ## Part 1
 
 ```elixir
-final_stacks =
-  Enum.reduce(instructions, state, fn [move, from, to], state ->
-    IO.inspect([move, from, to])
-
-    to_move =
-      state
-      |> Enum.at(from - 1)
-      |> Enum.take(move)
-
-    state =
-      state
-      |> List.update_at(to - 1, fn stack ->
-        (to_move |> Enum.reverse()) ++ stack
-      end)
-      |> List.update_at(from - 1, fn stack ->
-        stack |> Enum.drop(move)
-      end)
-
-    state
-  end)
+CargoCrane.activate(:CrateMover9000, instructions, initial_state)
+|> CargoCrane.inspect_tops()
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-[6, 9, 3]
-[2, 2, 1]
-[1, 8, 2]
-[3, 7, 2]
-[7, 6, 9]
-[1, 9, 5]
-[3, 5, 7]
-[6, 8, 6]
-[1, 7, 8]
-[6, 6, 5]
-[4, 5, 8]
-[9, 2, 9]
-[1, 2, 3]
-[3, 1, 3]
-[3, 5, 1]
-[10, 3, 5]
-[4, 4, 6]
-[2, 7, 6]
-[2, 6, 9]
-[6, 8, 6]
-[1, 4, 3]
-[1, 4, 5]
-[1, 4, 1]
-[2, 3, 1]
-[1, 3, 7]
-[8, 1, 9]
-[1, 1, 2]
-[1, 2, 7]
-[6, 6, 3]
-[7, 3, 5]
-[14, 5, 6]
-[2, 1, 3]
-[5, 5, 8]
-[5, 8, 1]
-[2, 7, 1]
-[5, 6, 9]
-[8, 9, 3]
-[13, 9, 3]
-[7, 1, 4]
-[6, 4, 1]
-[22, 3, 1]
-[1, 9, 3]
-[2, 6, 1]
-[1, 3, 4]
-'\a\t\b'
-[2, 1, 7]
-[2, 3, 2]
-[2, 6, 9]
-[2, 7, 8]
-[1, 3, 6]
-[9, 8, 6]
-[1, 2, 4]
-[8, 1, 2]
-[1, 9, 4]
-[3, 4, 1]
-[1, 4, 6]
-[10, 6, 5]
-[5, 2, 9]
-[6, 9, 3]
-[2, 5, 3]
-[2, 9, 7]
-[7, 5, 8]
-[5, 6, 2]
-[3, 3, 7]
-[3, 3, 5]
-[4, 5, 8]
-[1, 3, 5]
-[6, 6, 8]
-[1, 5, 7]
-'\t\b\t'
-[1, 3, 1]
-[7, 2, 7]
-[9, 7, 6]
-[2, 2, 3]
-[7, 9, 3]
-[9, 6, 8]
-[7, 3, 4]
-[2, 7, 6]
-[4, 4, 5]
-[3, 5, 6]
-[2, 7, 4]
-[5, 4, 7]
-[13, 8, 4]
-[2, 9, 4]
-[2, 8, 7]
-[6, 7, 5]
-[6, 4, 2]
-[1, 7, 5]
-[3, 2, 7]
-[1, 7, 8]
-[3, 2, 4]
-[2, 3, 9]
-[2, 7, 2]
-[6, 5, 4]
-[3, 6, 2]
-[2, 6, 9]
-[5, 2, 9]
-[12, 4, 8]
-[3, 9, 2]
-[12, 1, 5]
-[4, 4, 6]
-'\f\b\t'
-[2, 6, 5]
-[1, 4, 8]
-[1, 4, 1]
-[3, 2, 1]
-[2, 6, 7]
-[1, 5, 9]
-[2, 1, 4]
-[10, 5, 1]
-[2, 7, 3]
-[18, 9, 7]
-[8, 7, 2]
-[1, 9, 6]
-[1, 6, 7]
-'\n\a\t'
-[1, 4, 2]
-[19, 1, 5]
-[8, 5, 9]
-[3, 8, 4]
-[2, 5, 2]
-[2, 3, 6]
-[10, 5, 2]
-[4, 1, 2]
-[2, 9, 2]
-[1, 1, 6]
-[2, 5, 6]
-[1, 8, 7]
-[1, 5, 8]
-[1, 5, 6]
-[18, 2, 5]
-[5, 2, 1]
-[6, 5, 8]
-[1, 8, 9]
-[2, 2, 4]
-[1, 2, 6]
-[2, 7, 6]
-[1, 4, 1]
-[4, 8, 5]
-[1, 2, 9]
-[2, 8, 3]
-[1, 3, 6]
-[1, 4, 8]
-[1, 8, 9]
-[10, 5, 7]
-[5, 5, 1]
-[2, 4, 1]
-[3, 7, 6]
-[12, 1, 4]
-[8, 9, 5]
-[6, 7, 4]
-[1, 7, 9]
-[4, 4, 3]
-[1, 1, 7]
-[3, 9, 5]
-[2, 3, 1]
-[1, 7, 6]
-[8, 4, 7]
-[1, 7, 6]
-[7, 6, 4]
-[2, 1, 3]
-[1, 7, 1]
-[1, 3, 7]
-[1, 1, 6]
-[4, 9, 3]
-[5, 4, 6]
-[12, 6, 2]
-[3, 9, 4]
-[8, 2, 6]
-[2, 9, 6]
-[8, 5, 6]
-[4, 5, 8]
-[14, 6, 3]
-[11, 4, 9]
-[2, 2, 7]
-[8, 3, 9]
-[11, 3, 6]
-[14, 9, 1]
-[7, 1, 3]
-[2, 9, 5]
-[2, 2, 8]
-[6, 7, 5]
-[1, 9, 8]
-[13, 6, 3]
-[4, 6, 8]
-[3, 1, 6]
-[5, 5, 8]
-'\a\b\a'
-[2, 1, 8]
-[1, 4, 1]
-[4, 8, 9]
-[8, 7, 5]
-[1, 8, 1]
-[4, 9, 3]
-[1, 4, 5]
-[5, 5, 2]
-[1, 8, 9]
-[1, 8, 6]
-[2, 6, 2]
-[4, 8, 6]
-[4, 1, 8]
-[4, 8, 5]
-[1, 9, 8]
-[1, 2, 3]
-[4, 6, 1]
-[1, 8, 2]
-[3, 5, 4]
-[4, 2, 5]
-[1, 7, 9]
-[1, 2, 6]
-[3, 1, 8]
-[2, 4, 5]
-[2, 6, 1]
-[3, 8, 9]
-[4, 9, 2]
-[1, 7, 1]
-[1, 6, 7]
-[4, 1, 6]
-[1, 7, 4]
-[6, 2, 8]
-[2, 4, 8]
-[1, 9, 5]
-[3, 6, 2]
-[1, 6, 4]
-[7, 3, 5]
-[2, 8, 1]
-[3, 2, 8]
-[6, 8, 5]
-[17, 5, 3]
-[2, 1, 6]
-[3, 8, 3]
-[1, 9, 5]
-[11, 5, 2]
-[40, 3, 5]
-[11, 2, 7]
-[4, 7, 8]
-[1, 8, 9]
-[1, 3, 5]
-[1, 4, 8]
-[19, 5, 8]
-'\a\a\b'
-[16, 5, 2]
-[6, 5, 8]
-[1, 5, 8]
-[1, 9, 4]
-[1, 6, 1]
-[1, 4, 7]
-[1, 6, 9]
-[1, 1, 7]
-[1, 7, 3]
-[1, 7, 2]
-[1, 9, 8]
-[1, 3, 4]
-[1, 4, 6]
-[14, 2, 9]
-[24, 8, 4]
-[8, 8, 3]
-[1, 6, 3]
-[16, 4, 1]
-[3, 8, 4]
-[3, 3, 8]
-[4, 3, 4]
-[1, 3, 9]
-[13, 9, 4]
-[16, 1, 8]
-[8, 8, 1]
-[3, 1, 7]
-[1, 8, 6]
-[1, 3, 8]
-[10, 8, 5]
-[5, 5, 2]
-[3, 8, 9]
-[1, 8, 9]
-[1, 4, 5]
-[5, 2, 6]
-[3, 5, 2]
-[1, 6, 1]
-[5, 1, 5]
-[1, 1, 5]
-[2, 7, 3]
-[2, 3, 2]
-[1, 5, 7]
-[7, 5, 3]
-[5, 9, 5]
-[2, 7, 9]
-[4, 5, 6]
-[2, 9, 8]
-[2, 2, 4]
-[5, 3, 5]
-[1, 3, 2]
-[7, 4, 9]
-[1, 8, 1]
-[1, 2, 1]
-[9, 4, 6]
-[2, 1, 8]
-[1, 3, 9]
-[2, 8, 6]
-[13, 4, 6]
-[1, 8, 7]
-[2, 9, 6]
-[3, 5, 7]
-[3, 2, 5]
-[3, 2, 6]
-[5, 6, 2]
-[4, 2, 5]
-[4, 5, 7]
-[5, 5, 7]
-[7, 9, 6]
-[6, 7, 2]
-[22, 6, 5]
-[10, 5, 8]
-[7, 5, 4]
-[8, 8, 5]
-[18, 6, 2]
-[5, 7, 5]
-[1, 8, 2]
-[6, 5, 1]
-[7, 4, 2]
-[4, 1, 5]
-[1, 7, 9]
-[1, 8, 6]
-[1, 7, 8]
-[10, 5, 9]
-[12, 2, 1]
-[8, 5, 2]
-[19, 2, 9]
-[1, 6, 8]
-[13, 9, 3]
-[8, 1, 2]
-[5, 1, 3]
-[10, 2, 1]
-[7, 2, 5]
-[3, 5, 7]
-[4, 1, 3]
-[1, 2, 3]
-[3, 1, 2]
-[1, 8, 6]
-[2, 7, 5]
-[4, 1, 3]
-[6, 5, 4]
-[2, 2, 1]
-[1, 2, 9]
-[6, 4, 5]
-[5, 5, 9]
-[1, 6, 8]
-[1, 5, 1]
-[6, 9, 2]
-[5, 2, 4]
-[3, 1, 6]
-[2, 4, 7]
-[22, 3, 9]
-[1, 8, 4]
-[2, 4, 3]
-[2, 6, 1]
-[2, 1, 5]
-[1, 6, 7]
-[1, 7, 4]
-[6, 3, 7]
-[1, 2, 4]
-[8, 7, 3]
-[1, 4, 5]
-[1, 7, 9]
-[5, 3, 6]
-[1, 8, 4]
-[4, 3, 2]
-[32, 9, 3]
-[3, 6, 7]
-[5, 9, 3]
-[1, 9, 7]
-[2, 9, 2]
-[2, 4, 3]
-[2, 5, 4]
-[5, 3, 2]
-[3, 7, 8]
-[1, 7, 2]
-[1, 8, 5]
-[1, 3, 4]
-[5, 4, 5]
-[4, 5, 2]
-[3, 5, 7]
-[1, 7, 5]
-[1, 6, 5]
-[2, 8, 5]
-[15, 2, 4]
-[3, 5, 6]
-[4, 6, 5]
-[2, 5, 2]
-[1, 2, 4]
-[25, 3, 9]
-[2, 5, 2]
-[11, 9, 2]
-[13, 2, 1]
-[4, 4, 7]
-'\f\t\b'
-[6, 7, 8]
-[7, 4, 7]
-'\a\a\b'
-[1, 5, 1]
-[5, 4, 3]
-[2, 2, 1]
-[2, 9, 5]
-[7, 1, 7]
-[1, 1, 4]
-[12, 3, 2]
-[1, 3, 9]
-[1, 1, 3]
-[1, 9, 1]
-[7, 7, 2]
-[1, 4, 7]
-[2, 8, 7]
-[7, 1, 2]
-[1, 3, 4]
-[26, 2, 1]
-[4, 8, 1]
-[3, 1, 6]
-[1, 6, 3]
-[1, 6, 9]
-[1, 3, 8]
-[20, 1, 3]
-[1, 9, 7]
-[4, 7, 1]
-[1, 5, 3]
-[4, 3, 5]
-[1, 6, 2]
-[6, 3, 2]
-[8, 1, 4]
-[1, 1, 5]
-[3, 1, 4]
-[7, 2, 4]
-[10, 3, 8]
-[4, 4, 3]
-[12, 4, 7]
-[3, 3, 1]
-[2, 4, 3]
-[2, 8, 1]
-[6, 8, 9]
-[5, 9, 6]
-[1, 9, 3]
-[3, 8, 7]
-[10, 8, 5]
-[4, 8, 7]
-'\t\a\t'
-[4, 8, 4]
-[2, 4, 3]
-[3, 1, 7]
-[11, 7, 4]
-[6, 4, 8]
-[1, 7, 3]
-[4, 5, 1]
-[5, 3, 6]
-[5, 9, 4]
-[1, 9, 8]
-[10, 4, 8]
-[5, 1, 2]
-[1, 7, 6]
-[9, 6, 3]
-'\a\b\a'
-[3, 4, 1]
-[2, 2, 1]
-[9, 8, 3]
-[10, 5, 8]
-[18, 3, 9]
-[1, 7, 8]
-[1, 5, 3]
-[4, 8, 3]
-[2, 6, 3]
-[6, 7, 2]
-[1, 5, 3]
-[1, 1, 9]
-[10, 3, 9]
-[4, 1, 8]
-[13, 8, 1]
-[3, 1, 8]
-[3, 2, 4]
-[5, 2, 6]
-[5, 6, 4]
-[28, 9, 2]
-[2, 9, 5]
-[2, 5, 2]
-[1, 3, 7]
-[2, 1, 4]
-[3, 8, 3]
-[1, 9, 4]
-[3, 4, 6]
-[2, 3, 7]
-[8, 1, 5]
-[3, 7, 6]
-[14, 2, 8]
-[1, 9, 1]
-[6, 5, 6]
-[4, 2, 5]
-[9, 8, 2]
-[4, 8, 4]
-[7, 2, 4]
-[12, 4, 3]
-[5, 4, 7]
-[5, 7, 4]
-[1, 8, 7]
-[1, 4, 5]
-[2, 5, 4]
-[1, 5, 8]
-[1, 5, 9]
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-[
-  ["R", "V"],
-  ["W", "F", "J", "H", "S", "V", "G", "L", "B", "H", "V", "P", "Z", "N", "V"],
-  ["L", "F", "D", "V", "Z", "G", "N", "M", "R", "P", "P", "G", "N"],
-  ["W", "J", "Z", "C", "H", "Z", "S", "C"],
-  ["G", "M", "V"],
-  ["J", "S", "P", "T", "L", "P", "R", "V", "Q", "B", "Q", "M"],
-  ["G"],
-  ["F"],
-  ["D"]
-]
-```
-
-```elixir
-final_stacks
-|> Enum.map(&hd(&1))
-|> Enum.join()
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-"RWLWGJGFD"
+"CMZ"
 ```
 
 ## Part 2
 
-_todo, make utils so this isn't a copy-pasta of part 1_
-
 ```elixir
-final_stacks =
-  Enum.reduce(instructions, state, fn [move, from, to], state ->
-    IO.inspect([move, from, to])
-
-    to_move =
-      state
-      |> Enum.at(from - 1)
-      |> Enum.take(move)
-
-    state =
-      state
-      |> List.update_at(to - 1, fn stack ->
-        to_move ++ stack
-      end)
-      |> List.update_at(from - 1, fn stack ->
-        stack |> Enum.drop(move)
-      end)
-
-    state
-  end)
+CargoCrane.activate(:CrateMover9001, instructions, initial_state)
+|> CargoCrane.inspect_tops()
 ```
 
-```elixir
-final_stacks
-|> Enum.map(&hd(&1))
-|> Enum.join()
+<!-- livebook:{"output":true} -->
+
+```
+"MCD"
 ```
