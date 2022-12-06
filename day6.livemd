@@ -1,0 +1,83 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent 2022 - Day 6
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Setup
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+packets =
+  input
+  |> Kino.Input.read()
+  |> String.graphemes()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["m", "j", "q", "j", "p", "q", "m", "g", "b", "l", "j", "s", "p", "h", "d", "z", "t", "n", "v", "j",
+ "f", "q", "w", "r", "c", "g", "s", "m", "l", "b"]
+```
+
+## Utils
+
+```elixir
+defmodule CommunicationDevice do
+  def find_first_duplicate(packets, chunk_size) do
+    index =
+      packets
+      |> Enum.chunk_every(chunk_size, 1, :discard)
+      |> Enum.map(&MapSet.new(&1))
+      |> Enum.with_index()
+      |> Enum.find(fn {set, _index} -> MapSet.size(set) == chunk_size end)
+      |> elem(1)
+
+    index + chunk_size
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, CommunicationDevice, <<70, 79, 82, 49, 0, 0, 8, ...>>, {:find_first_duplicate, 2}}
+```
+
+## Part 1
+
+```elixir
+CommunicationDevice.find_first_duplicate(packets, 4)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+7
+```
+
+## Part 2
+
+```elixir
+CommunicationDevice.find_first_duplicate(packets, 14)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+19
+```
