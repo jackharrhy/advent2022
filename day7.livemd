@@ -1,0 +1,207 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent 2022 - Day 7
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Setup
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+raw_session =
+  input
+  |> Kino.Input.read()
+  |> String.split("$")
+  |> tl
+  |> Enum.map(&String.trim/1)
+  |> Enum.map(&String.split(&1, "\n"))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  ["cd /"],
+  ["ls", "dir a", "14848514 b.txt", "8504156 c.dat", "dir d"],
+  ["cd a"],
+  ["ls", "dir e", "29116 f", "2557 g", "62596 h.lst"],
+  ["cd e"],
+  ["ls", "584 i"],
+  ["cd .."],
+  ["cd .."],
+  ["cd d"],
+  ["ls", "4060174 j", "8033020 d.log", "5626152 d.ext", "7214296 k"]
+]
+```
+
+```elixir
+session =
+  raw_session
+  |> Enum.map(fn raw_command ->
+    case length(raw_command) do
+      1 -> {:cd, raw_command |> Enum.at(0) |> String.split(" ") |> Enum.at(1)}
+      _ -> {:ls, raw_command |> Enum.drop(1) |> Enum.map(&String.split(&1, " "))}
+    end
+  end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  cd: "/",
+  ls: [["dir", "a"], ["14848514", "b.txt"], ["8504156", "c.dat"], ["dir", "d"]],
+  cd: "a",
+  ls: [["dir", "e"], ["29116", "f"], ["2557", "g"], ["62596", "h.lst"]],
+  cd: "e",
+  ls: [["584", "i"]],
+  cd: "..",
+  cd: "..",
+  cd: "d",
+  ls: [["4060174", "j"], ["8033020", "d.log"], ["5626152", "d.ext"], ["7214296", "k"]]
+]
+```
+
+## Utils
+
+```elixir
+defmodule DeviceFS do
+  def dir_to_string(dir), do: "/#{dir |> Enum.reverse() |> tl |> Enum.join("/")}"
+
+  def expand_contents(dir, contents) do
+    Enum.map(contents, fn content ->
+      case content do
+        ["dir", name] -> ["dir", dir_to_string([name | dir])]
+        _ -> content
+      end
+    end)
+  end
+
+  def generate_fs(fs, curdir, [{:cd, ".."} | session]) do
+    generate_fs(fs, Enum.drop(curdir, 1), session)
+  end
+
+  def generate_fs(fs, curdir, [{:cd, dir} | [{:ls, contents} | session]]) do
+    dir = [dir | curdir]
+    fs = Map.put(fs, dir_to_string(dir), expand_contents(dir, contents))
+    generate_fs(fs, dir, session)
+  end
+
+  def generate_fs(fs, _curdir, []), do: fs
+
+  def generate_fs(session), do: generate_fs(%{}, [], session)
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, DeviceFS, <<70, 79, 82, 49, 0, 0, 11, ...>>, {:generate_fs, 1}}
+```
+
+```elixir
+fs = DeviceFS.generate_fs(session)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{
+  "/" => [["dir", "/a"], ["14848514", "b.txt"], ["8504156", "c.dat"], ["dir", "/d"]],
+  "/a" => [["dir", "/a/e"], ["29116", "f"], ["2557", "g"], ["62596", "h.lst"]],
+  "/a/e" => [["584", "i"]],
+  "/d" => [["4060174", "j"], ["8033020", "d.log"], ["5626152", "d.ext"], ["7214296", "k"]]
+}
+```
+
+```elixir
+defmodule DeviceFSUtils do
+  def get_size_of_dir(fs, dir) do
+    dir = Map.get(fs, dir)
+
+    sizes =
+      for item <- dir do
+        case item do
+          ["dir", name] -> get_size_of_dir(fs, name)
+          [number, _name] -> String.to_integer(number)
+        end
+      end
+
+    Enum.sum(sizes)
+  end
+
+  def get_sizes_of_dirs(fs) do
+    Map.keys(fs) |> Enum.map(&get_size_of_dir(fs, &1))
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, DeviceFSUtils, <<70, 79, 82, 49, 0, 0, 9, ...>>, {:get_sizes_of_dirs, 1}}
+```
+
+## Part 1
+
+```elixir
+DeviceFSUtils.get_sizes_of_dirs(fs)
+|> Enum.filter(&(&1 <= 100_000))
+|> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+95437
+```
+
+## Part 2
+
+```elixir
+total_size_of_fs = 70_000_000
+space_needed_to_update = 30_000_000
+
+size_of_root_dir = DeviceFSUtils.get_size_of_dir(fs, "/")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+48381165
+```
+
+```elixir
+space_to_free_up = size_of_root_dir + space_needed_to_update - total_size_of_fs
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+8381165
+```
+
+```elixir
+DeviceFSUtils.get_sizes_of_dirs(fs)
+|> Enum.filter(&(&1 >= space_to_free_up))
+|> Enum.min()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+24933642
+```
