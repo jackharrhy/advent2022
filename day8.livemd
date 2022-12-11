@@ -128,6 +128,8 @@ end
 {:module, Quadcopter, <<70, 79, 82, 49, 0, 0, 18, ...>>, {:combine_results, 2}}
 ```
 
+## Part 1
+
 ```elixir
 visibility =
   trees
@@ -159,6 +161,8 @@ _____
 ```
 21
 ```
+
+## Part 2
 
 ```elixir
 scenic_scores =

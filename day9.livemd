@@ -1,0 +1,264 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent 2022 - Day 9
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Setup
+
+```elixir
+defmodule Parse do
+  def kino_textarea(input) do
+    input
+    |> Kino.Input.read()
+    |> String.split("\n")
+    |> Enum.map(&String.split(&1, " "))
+    |> Enum.map(fn [d, n] -> {String.to_atom(d), String.to_integer(n)} end)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Parse, <<70, 79, 82, 49, 0, 0, 8, ...>>, {:kino_textarea, 1}}
+```
+
+```elixir
+part1_input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+part1_steps = Parse.kino_textarea(part1_input)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[R: 4, U: 4, L: 3, D: 1, R: 4, D: 1, L: 5, R: 2]
+```
+
+```elixir
+part2_input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+part2_steps = Parse.kino_textarea(part2_input)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[R: 5, U: 8, L: 8, D: 3, R: 17, D: 10, L: 25, U: 20]
+```
+
+## Drawing
+
+```elixir
+defmodule Draw do
+  def sim(visited, head \\ nil, tail \\ nil)
+
+  def sim(visited, head, tail) do
+    keys = Map.keys(visited)
+    min_x = keys |> Enum.map(&elem(&1, 0)) |> Enum.min()
+    max_x = keys |> Enum.map(&elem(&1, 0)) |> Enum.max()
+    min_y = keys |> Enum.map(&elem(&1, 1)) |> Enum.min()
+    max_y = keys |> Enum.map(&elem(&1, 1)) |> Enum.max()
+    sim(visited, min_x, max_x, min_y, max_y, head, tail)
+  end
+
+  def sim(visited, min_x, max_x, min_y, max_y, head, tail) do
+    for y <- max_y..min_y do
+      row =
+        for x <- min_x..max_x do
+          loc = {x, y}
+
+          cond do
+            loc == head -> "H"
+            loc == tail -> "T"
+            Map.has_key?(visited, loc) -> "#"
+            true -> "."
+          end
+        end
+
+      "#{row}\n"
+    end
+    |> Enum.join()
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Draw, <<70, 79, 82, 49, 0, 0, 14, ...>>, {:sim, 7}}
+```
+
+## Utils
+
+```elixir
+defmodule NewRopeSim do
+  def follow(a, b) when is_number(a) and is_number(b) do
+    cond do
+      a > b + 1 -> a - 1
+      a < b - 1 -> a + 1
+      true -> a
+    end
+  end
+
+  def follow({tx, ty}, {hx, hy}) do
+    if abs(tx - hx) == 1 and abs(ty - hy) == 1 do
+      {tx, ty}
+    else
+      cond do
+        tx < hx and ty < hy -> {tx + 1, ty + 1}
+        tx > hx and ty > hy -> {tx - 1, ty - 1}
+        tx > hx and ty < hy -> {tx - 1, ty + 1}
+        tx < hx and ty > hy -> {tx + 1, ty - 1}
+        true -> {follow(tx, hx), follow(ty, hy)}
+      end
+    end
+  end
+
+  def knots_follow([knot | knots], head) do
+    knot = follow(knot, head)
+
+    if knot == head do
+      [knot | knots]
+    else
+      [knot | knots_follow(knots, knot)]
+    end
+  end
+
+  def knots_follow([], _head), do: []
+
+  def apply_moves([{mx, my} | moves], {hx, hy}, knots, visited) do
+    head = {hx + mx, hy + my}
+
+    knots = knots_follow(knots, head)
+    tail = List.last(knots)
+    visited = Map.put(visited, tail, true)
+
+    apply_moves(moves, head, knots, visited)
+  end
+
+  def apply_moves([], head, tail, visited), do: {head, tail, visited}
+
+  def apply_step(step, head, knots, visited) do
+    moves =
+      case step do
+        {:U, amount} -> List.duplicate({0, 1}, amount)
+        {:R, amount} -> List.duplicate({1, 0}, amount)
+        {:D, amount} -> List.duplicate({0, -1}, amount)
+        {:L, amount} -> List.duplicate({-1, 0}, amount)
+      end
+
+    apply_moves(moves, head, knots, visited)
+  end
+
+  def run([step | steps], head, knots, visited) do
+    {head, knots, visited} = apply_step(step, head, knots, visited)
+    run(steps, head, knots, visited)
+  end
+
+  def run([], _head, _knots, visited), do: visited
+
+  def run(steps, num_knots) do
+    head = {0, 0}
+    knots = List.duplicate({0, 0}, num_knots)
+    visited = Map.put(%{}, {0, 0}, true)
+    run(steps, head, knots, visited)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, NewRopeSim, <<70, 79, 82, 49, 0, 0, 18, ...>>, {:run, 2}}
+```
+
+## Part 1
+
+```elixir
+visited = NewRopeSim.run(part1_steps, 1)
+
+Draw.sim(visited) |> IO.write()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+..##.
+...##
+.####
+....#
+####.
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+```elixir
+Map.keys(visited) |> Enum.count()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+13
+```
+
+## Part 2
+
+```elixir
+visited = NewRopeSim.run(part2_steps, 9)
+
+Draw.sim(visited) |> IO.write()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#.....................
+#.............###.....
+#............#...#....
+.#..........#.....#...
+..#..........#.....#..
+...#........#.......#.
+....#......#.........#
+.....#..............#.
+......#............#..
+.......#..........#...
+........#........#....
+.........########.....
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+```elixir
+Map.keys(visited) |> Enum.count()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+36
+```
