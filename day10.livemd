@@ -1,0 +1,191 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent 2022 - Day 10
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Setup
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+instructs =
+  input
+  |> Kino.Input.read()
+  |> String.split("\n")
+  |> Enum.map(&String.split(&1, " "))
+  |> Enum.map(fn list ->
+    case list do
+      ["noop"] -> {:noop}
+      ["addx", val] -> {:addx, String.to_integer(val)}
+    end
+  end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  {:noop},
+  {:noop},
+  {:noop},
+  {:addx, 3},
+  {:addx, 7},
+  {:noop},
+  {:noop},
+  {:noop},
+  {:noop},
+  {:addx, 6},
+  {:noop},
+  {:addx, -1},
+  {:noop},
+  {:addx, 5},
+  {:addx, 1},
+  {:noop},
+  {:addx, 4},
+  {:noop},
+  {:noop},
+  {:noop},
+  {:noop},
+  {:addx, 6},
+  {:addx, -1},
+  {:noop},
+  {:addx, 3},
+  {:addx, -13},
+  {:addx, -22},
+  {:noop},
+  {:noop},
+  {:addx, 3},
+  {:addx, 2},
+  {:addx, 11},
+  {:addx, -4},
+  {:addx, 11},
+  {:addx, -10},
+  {:addx, 2},
+  {:addx, 5},
+  {:addx, 2},
+  {:addx, -2},
+  {:noop},
+  {:addx, 7},
+  {:addx, 3},
+  {:addx, -2},
+  {:addx, 2},
+  {:addx, 5},
+  {:addx, 2},
+  {:addx, -2},
+  {:addx, -8},
+  {:addx, ...},
+  {...},
+  ...
+]
+```
+
+```elixir
+defmodule CPU do
+  def cycle({:addx, val}, x, history) do
+    eventual_x = x + val
+    history = [x, x] ++ history
+    {eventual_x, history}
+  end
+
+  def cycle({:noop}, x, history), do: {x, [x | history]}
+
+  def cycle(:instruct, [instruct | instructs], x, history) do
+    {x, history} = cycle(instruct, x, history)
+    cycle(:instruct, instructs, x, history)
+  end
+
+  def cycle(:instruct, [], _x, history), do: history
+
+  def run(instructs), do: cycle(:instruct, instructs, 1, [])
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, CPU, <<70, 79, 82, 49, 0, 0, 8, ...>>, {:run, 1}}
+```
+
+```elixir
+defmodule CRT do
+  def display(cycles) do
+    bars = Enum.chunk_every(cycles, 40)
+
+    for bar <- bars do
+      for {x, pixel} <- Enum.with_index(bar) do
+        after_start = pixel >= x - 1
+        before_end = pixel <= x + 1
+        if after_start and before_end, do: "#", else: "."
+      end
+    end
+    |> Enum.join("\n")
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, CRT, <<70, 79, 82, 49, 0, 0, 9, ...>>, {:display, 1}}
+```
+
+## Part 1
+
+```elixir
+history = CPU.run(instructs) |> Enum.reverse()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[1, 1, 1, 1, 1, 4, 4, 11, 11, 11, 11, 11, 11, 17, 17, 17, 16, 16, 16, 21, 21, 22, 22, 22, 26, 26,
+ 26, 26, 26, 26, 32, 32, 31, 31, 31, 34, 34, 21, 21, -1, -1, -1, -1, 2, 2, 4, 4, 15, 15, 11, ...]
+```
+
+```elixir
+20..220//40
+|> Enum.map(&(Enum.at(history, &1 - 1) * &1))
+|> Enum.sum()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+12560
+```
+
+## Part 2
+
+```elixir
+CRT.display(history) |> IO.write()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+###..#....###...##..####.###...##..#....
+#..#.#....#..#.#..#.#....#..#.#..#.#....
+#..#.#....#..#.#..#.###..###..#....#....
+###..#....###..####.#....#..#.#....#....
+#....#....#....#..#.#....#..#.#..#.#....
+#....####.#....#..#.#....###...##..####.
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```

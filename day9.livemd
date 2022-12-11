@@ -107,7 +107,7 @@ end
 ## Utils
 
 ```elixir
-defmodule NewRopeSim do
+defmodule RopeSim do
   def follow(a, b) when is_number(a) and is_number(b) do
     cond do
       a > b + 1 -> a - 1
@@ -185,13 +185,13 @@ end
 <!-- livebook:{"output":true} -->
 
 ```
-{:module, NewRopeSim, <<70, 79, 82, 49, 0, 0, 18, ...>>, {:run, 2}}
+{:module, RopeSim, <<70, 79, 82, 49, 0, 0, 18, ...>>, {:run, 2}}
 ```
 
 ## Part 1
 
 ```elixir
-visited = NewRopeSim.run(part1_steps, 1)
+visited = RopeSim.run(part1_steps, 1)
 
 Draw.sim(visited) |> IO.write()
 ```
@@ -225,7 +225,7 @@ Map.keys(visited) |> Enum.count()
 ## Part 2
 
 ```elixir
-visited = NewRopeSim.run(part2_steps, 9)
+visited = RopeSim.run(part2_steps, 9)
 
 Draw.sim(visited) |> IO.write()
 ```
