@@ -1,0 +1,225 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent 2022 - Day 11
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Setup
+
+Part 1 was simple enough, but I did not come across the _trick_ of part 2 without digging into the subreddit to figure it out... I cannot maths :)
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+defmodule Parse do
+  def remove_pre(str, pre), do: String.replace_prefix(str, pre, "")
+  def remove_suf(str, suf), do: String.replace_suffix(str, suf, "")
+  def to_int(str), do: String.to_integer(str)
+
+  def monkey([index, items, op, test, if_true, if_false]) do
+    index = index |> remove_pre("Monkey ") |> remove_suf(":") |> to_int
+
+    items =
+      items
+      |> remove_pre("  Starting items: ")
+      |> String.split(", ")
+      |> Enum.map(&to_int/1)
+
+    [l, op, r] =
+      op
+      |> remove_pre("  Operation: new = ")
+      |> String.split(" ")
+
+    l = if l == "old", do: :old, else: String.to_integer(l)
+    op = String.to_atom(op)
+    r = if r == "old", do: :old, else: String.to_integer(r)
+
+    test =
+      test
+      |> remove_pre("  Test: divisible by ")
+      |> to_int()
+
+    if_true =
+      if_true
+      |> remove_pre("    If true: throw to monkey ")
+      |> to_int()
+
+    if_false =
+      if_false
+      |> remove_pre("    If false: throw to monkey ")
+      |> to_int()
+
+    %{
+      index: index,
+      items: items,
+      op: {l, op, r},
+      test: test,
+      if_true: if_true,
+      if_false: if_false,
+      inspected: 0
+    }
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Parse, <<70, 79, 82, 49, 0, 0, 13, ...>>, {:monkey, 1}}
+```
+
+```elixir
+monkeys =
+  input
+  |> Kino.Input.read()
+  |> String.split("\n\n")
+  |> Enum.map(&String.split(&1, "\n"))
+  |> Enum.map(&Parse.monkey/1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  %{if_false: 3, if_true: 2, index: 0, inspected: 0, items: 'Ob', op: {:old, :*, 19}, test: 23},
+  %{if_false: 0, if_true: 2, index: 1, inspected: 0, items: '6AKJ', op: {:old, :+, 6}, test: 19},
+  %{if_false: 3, if_true: 1, index: 2, inspected: 0, items: 'O<a', op: {:old, :*, :old}, test: 13},
+  %{if_false: 1, if_true: 0, index: 3, inspected: 0, items: 'J', op: {:old, :+, 3}, test: 17}
+]
+```
+
+## Utils
+
+```elixir
+defmodule QuickMaths do
+  def lcm(0, 0), do: 0
+  def lcm(a, b), do: a * b / Integer.gcd(a, b)
+end
+
+lcm =
+  monkeys
+  |> Enum.map(& &1[:test])
+  |> Enum.reduce(fn a, b -> floor(QuickMaths.lcm(a, b)) end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+96577
+```
+
+```elixir
+defmodule Monkey do
+  def next_worry(old, {l, op, r}, div) do
+    l = if l == :old, do: old, else: l
+    r = if r == :old, do: old, else: r
+    Integer.floor_div(apply(Kernel, op, [l, r]), div)
+  end
+
+  def handle_inspect(monkey, [item | items], monkeys, lcm, div) do
+    worry = next_worry(item, monkey[:op], div)
+
+    is_divisible = Integer.mod(worry, monkey[:test]) == 0
+
+    give_to_monkey =
+      cond do
+        is_divisible -> monkey[:if_true]
+        true -> monkey[:if_false]
+      end
+
+    worry = rem(worry, lcm)
+
+    monkeys =
+      List.update_at(monkeys, give_to_monkey, fn monkey ->
+        Map.update!(monkey, :items, &(&1 ++ [worry]))
+      end)
+
+    handle_inspect(monkey, items, monkeys, lcm, div)
+  end
+
+  def handle_inspect(_monkey, [], monkeys, _lcm, _div), do: monkeys
+
+  def handle_monkey(index, monkeys, lcm, div) do
+    monkey = Enum.at(monkeys, index)
+
+    if monkey == nil do
+      monkeys
+    else
+      monkeys = handle_inspect(monkey, monkey[:items], monkeys, lcm, div)
+
+      monkeys =
+        List.update_at(monkeys, index, fn monkey ->
+          inspected = monkey[:inspected] + length(monkey[:items])
+          %{monkey | items: [], inspected: inspected}
+        end)
+
+      handle_monkey(index + 1, monkeys, lcm, div)
+    end
+  end
+
+  def handle_rounds(monkeys, _lcm, _div, rounds) when rounds == 0, do: monkeys
+
+  def handle_rounds(monkeys, lcm, div, rounds) do
+    monkeys = handle_monkey(0, monkeys, lcm, div)
+    handle_rounds(monkeys, lcm, div, rounds - 1)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Monkey, <<70, 79, 82, 49, 0, 0, 16, ...>>, {:handle_rounds, 4}}
+```
+
+## Part 1
+
+```elixir
+part1_monkeys = Monkey.handle_rounds(monkeys, lcm, 3, 20)
+
+[first, second] =
+  part1_monkeys
+  |> Enum.map(& &1[:inspected])
+  |> Enum.sort(:desc)
+  |> Enum.take(2)
+
+first * second
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+10605
+```
+
+## Part 2
+
+```elixir
+part2_monkeys = Monkey.handle_rounds(monkeys, lcm, 1, 10000)
+
+[first, second] =
+  part2_monkeys
+  |> Enum.map(& &1[:inspected])
+  |> Enum.sort(:desc)
+  |> Enum.take(2)
+
+first * second
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2713310158
+```
