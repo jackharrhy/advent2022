@@ -1,0 +1,53 @@
+# Advent 2022 - Day 12
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"}
+])
+```
+
+## Setup
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+grid =
+  input
+  |> Kino.Input.read()
+  |> String.split("\n")
+  |> Enum.map(&String.graphemes/1)
+```
+
+## Utils
+
+```elixir
+defmodule GridToGraph do
+  def parse(grid) do
+    x_len = length(Enum.at(grid, 0)) - 1
+    y_len = length(grid) - 1
+    nil_row = List.duplicate(nil, y_len)
+
+    for y <- 0..y_len do
+      prev_row = if y - 1 < 0, do: nil_row, else: Enum.at(grid, y - 1, nil_row)
+      row = Enum.at(grid, y, nil_row)
+      next_row = Enum.at(grid, y + 1, nil_row)
+
+      for x <- 0..x_len do
+        top = Enum.at(prev_row, x)
+        bottom = Enum.at(next_row, x)
+        right = Enum.at(row, x + 1)
+        left = if x - 1 < 0, do: nil, else: Enum.at(row, x - 1)
+        IO.inspect([x, y, top, bottom, right, left])
+      end
+    end
+  end
+end
+```
+
+```elixir
+graph = GridToGraph.parse(grid)
+
+graph
+```
