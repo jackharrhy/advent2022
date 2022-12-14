@@ -1,0 +1,111 @@
+# Advent 2022 - Day 14
+
+```elixir
+Mix.install([
+  {:kino, github: "livebook-dev/kino"},
+  {:libgraph, "~> 0.7"}
+])
+```
+
+## Setup
+
+```elixir
+input = Kino.Input.textarea("Please paste your input file:")
+```
+
+```elixir
+structures =
+  input
+  |> Kino.Input.read()
+  |> String.split("\n")
+  |> Enum.map(fn structure ->
+    structure
+    |> String.split(" -> ")
+    |> Enum.map(fn pair ->
+      pair |> String.split(",") |> Enum.map(&String.to_integer/1)
+    end)
+  end)
+```
+
+## Utils
+
+```elixir
+defmodule StructuresToGrid do
+  def unravel_pair([[a, b], [x, y]]) when b == y do
+    range = a..x
+    dups = List.duplicate(b, Range.size(range))
+    Enum.zip(range, dups)
+  end
+
+  def unravel_pair([[a, b], [x, y]]) when a == x do
+    range = b..y
+    dups = List.duplicate(a, Range.size(range))
+    Enum.zip(dups, range)
+  end
+
+  def unravel_structure(structure) do
+    Enum.chunk_every(structure, 2, 1, :discard)
+    |> Enum.map(&unravel_pair/1)
+    |> Enum.map(&MapSet.new/1)
+    |> Enum.reduce(&MapSet.union(&1, &2))
+  end
+
+  def run(structures) do
+    structures
+    |> Enum.map(&unravel_structure/1)
+    |> Enum.reduce(&MapSet.union(&1, &2))
+  end
+end
+```
+
+```elixir
+grid = StructuresToGrid.run(structures)
+```
+
+```elixir
+max_y =
+  structures
+  |> List.flatten()
+  |> tl
+  |> Enum.take_every(2)
+  |> Enum.max()
+```
+
+```elixir
+defmodule SandSim do
+  def drop_sand(grid, max_y, has_floor, {x, y}) do
+    cond do
+      !has_floor and y > max_y -> nil
+      has_floor and y + 1 == max_y + 2 -> MapSet.put(grid, {x, y})
+      !MapSet.member?(grid, {x, y + 1}) -> drop_sand(grid, max_y, has_floor, {x, y + 1})
+      !MapSet.member?(grid, {x - 1, y + 1}) -> drop_sand(grid, max_y, has_floor, {x - 1, y + 1})
+      !MapSet.member?(grid, {x + 1, y + 1}) -> drop_sand(grid, max_y, has_floor, {x + 1, y + 1})
+      true -> MapSet.put(grid, {x, y})
+    end
+  end
+
+  def drop_sand(grid, max_y, has_floor), do: drop_sand(grid, max_y, has_floor, {500, 0})
+
+  def run(grid, max_y, has_floor, count \\ 0) do
+    next_grid = drop_sand(grid, max_y, has_floor)
+
+    if next_grid == nil or MapSet.member?(grid, {500, 0}) do
+      count
+    else
+      run(next_grid, max_y, has_floor, count + 1)
+    end
+  end
+end
+```
+
+## Part 1
+
+```elixir
+SandSim.run(grid, max_y, false)
+```
+
+## Part 2
+
+```elixir
+SandSim.run(grid, max_y, true)
+```
