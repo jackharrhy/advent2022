@@ -1,3 +1,5 @@
+<!-- livebook:{"persist_outputs":true} -->
+
 # Advent 2022 - Day 14
 
 ```elixir
@@ -5,6 +7,12 @@ Mix.install([
   {:kino, github: "livebook-dev/kino"},
   {:libgraph, "~> 0.7"}
 ])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
 ```
 
 ## Setup
@@ -25,6 +33,12 @@ structures =
       pair |> String.split(",") |> Enum.map(&String.to_integer/1)
     end)
   end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[[[498, 4], [498, 6], [496, 6]], [[503, 4], [502, 4], [502, 9], [494, 9]]]
 ```
 
 ## Utils
@@ -58,8 +72,41 @@ defmodule StructuresToGrid do
 end
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+{:module, StructuresToGrid, <<70, 79, 82, 49, 0, 0, 11, ...>>, {:run, 1}}
+```
+
 ```elixir
 grid = StructuresToGrid.run(structures)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+MapSet.new([
+  {494, 9},
+  {495, 9},
+  {496, 6},
+  {496, 9},
+  {497, 6},
+  {497, 9},
+  {498, 4},
+  {498, 5},
+  {498, 6},
+  {498, 9},
+  {499, 9},
+  {500, 9},
+  {501, 9},
+  {502, 4},
+  {502, 5},
+  {502, 6},
+  {502, 7},
+  {502, 8},
+  {502, 9},
+  {503, 4}
+])
 ```
 
 ```elixir
@@ -69,6 +116,12 @@ max_y =
   |> tl
   |> Enum.take_every(2)
   |> Enum.max()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+9
 ```
 
 ```elixir
@@ -98,14 +151,32 @@ defmodule SandSim do
 end
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+{:module, SandSim, <<70, 79, 82, 49, 0, 0, 13, ...>>, {:run, 4}}
+```
+
 ## Part 1
 
 ```elixir
 SandSim.run(grid, max_y, false)
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+24
+```
+
 ## Part 2
 
 ```elixir
 SandSim.run(grid, max_y, true)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+93
 ```
